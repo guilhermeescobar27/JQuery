@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>API</title>
+  <link rel="stylesheet" href="style.css"> <!-- opcional -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="css/API.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Cálculo de Salário</a> |
+    <a href="api.html">Consulta CEP</a>
+  </nav>
+
+  <h1>Consulta de Endereço via CEP</h1>
+
+  <label for="cep">Digite o CEP:</label>
+  <input type="text" id="cep" maxlength="8" placeholder="Ex: 01001000">
+  <button id="buscarCep">Buscar</button>
+
+  <div id="resultado" style="margin-top: 20px;"></div>
+
+  <script>
+    $("#buscarCep").click(function () {
+      const cep = $("#cep").val();
+
+      if (cep.length !== 8 || isNaN(cep)) {
+        alert("Digite um CEP válido com 8 números.");
+        return;
+      }
+
+      $.get(`https://brasilapi.com.br/api/cep/v1/${cep}`, function (data) {
+        $("#resultado").html(`
+          <strong>CEP:</strong> ${data.cep}<br>
+          <strong>Cidade:</strong> ${data.city}<br>
+          <strong>Estado:</strong> ${data.state}<br>
+          <strong>Bairro:</strong> ${data.neighborhood || 'N/A'}<br>
+          <strong>Rua:</strong> ${data.street || 'N/A'}
+        `);
+      }).fail(function () {
+        $("#resultado").html(`<p style="color:red;">CEP não encontrado.</p>`);
+      });
+    });
+  </script>
+</body>
+</html>
